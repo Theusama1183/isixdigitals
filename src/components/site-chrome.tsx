@@ -177,9 +177,10 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
       )}
       <main id="main">{children}</main>
       <footer className="site-footer">
-        <div className="footer-main">
-          <div className="footer-brand-col">
-            <Link href="/" className="footer-brand" aria-label="iSixDigitals home">
+        <div className="section-inner">
+          <div className="footer-main flex gap-4">
+          <div className="footer-brand-col w-[30%] flex-shrink-0">
+            <Link href="/" className="footer-brand w-[150px] flex" aria-label="iSixDigitals home">
               <img
                 src={FooterLogo}
                 alt="iSixDigitals"
@@ -199,7 +200,7 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
               </Link>
             </Button>
           </div>
-          <nav className="footer-nav" aria-label="Footer navigation">
+          <nav className="footer-nav w-full" aria-label="Footer navigation">
             <div className="footer-col">
               <h2 className="footer-heading">Explore</h2>
               <ul>
@@ -246,7 +247,7 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
             </div>
           </nav>
         </div>
-        <div className="footer-bottom">
+        <div className="footer-bottom mt-4">
           <span>© {new Date().getFullYear()} iSixDigitals. All rights reserved.</span>
           <nav className="footer-legal" aria-label="Legal">
             {legalLinks.map((link) => (
@@ -257,6 +258,8 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
           </nav>
           <span>Built for creative businesses.</span>
         </div>
+        </div>
+        
       </footer>
     </div>
   );
