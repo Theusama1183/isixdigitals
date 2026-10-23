@@ -1,40 +1,68 @@
-"use client";
+﻿"use client";
 
 import { useState, type FormEvent } from "react";
-import { Download } from "lucide-react";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ContactForm({ email }: { email: string | undefined }) {
-  const [prepared, setPrepared] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
-  function prepare(e: FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const sendTo = email ? ` Email it to ${email} to start the conversation.` : "";
-    const brief = `iSixDigitals — Studio project brief\n\nName: ${data.get("name")}\nEmail: ${data.get("email")}\nStudio: ${data.get("studio")}\nWebsite: ${data.get("website") || "Not provided"}\nInterest: ${data.get("interest")}\n\nProject details:\n${data.get("message")}\n\nThis brief has not been sent.${sendTo}`;
-    const url = URL.createObjectURL(new Blob([brief], { type: "text/plain" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "isixdigitals-project-brief.txt";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setPrepared(true);
+    setStatus("loading");
+    setErrorMsg("");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      studio: String(data.get("studio") || "").trim(),
+      website: String(data.get("website") || "").trim(),
+      interest: String(data.get("interest") || "").trim(),
+      message: String(data.get("message") || "").trim(),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok || json?.ok === false) {
+        throw new Error(json?.error || "Failed to send inquiry.");
+      }
+
+      form.reset();
+      setStatus("success");
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      );
+    }
   }
 
   return (
-    <form className="contact-form" onSubmit={prepare}>
+    <form className="contact-form" onSubmit={submit}>
       <noscript>
         <p className="form-note">
           {email ? (
             <>
-              This form needs JavaScript to prepare the brief. You can write to{" "}
+              This form needs JavaScript to send your inquiry. You can write to{" "}
               <a href={`mailto:${email}`}>{email}</a> directly instead.
             </>
           ) : (
-            <>This form needs JavaScript to prepare the brief.</>
+            <>This form needs JavaScript to send your inquiry.</>
           )}
         </p>
       </noscript>
+
       <div className="field-row">
         <div className="field">
           <label htmlFor="name">Your name *</label>
@@ -45,6 +73,7 @@ export function ContactForm({ email }: { email: string | undefined }) {
             placeholder="Your name"
             required
             maxLength={150}
+            disabled={status === "loading"}
           />
         </div>
         <div className="field">
@@ -56,9 +85,11 @@ export function ContactForm({ email }: { email: string | undefined }) {
             autoComplete="email"
             placeholder="you@yourstudio.com"
             required
+            disabled={status === "loading"}
           />
         </div>
       </div>
+
       <div className="field-row">
         <div className="field">
           <label htmlFor="studio">Studio name *</label>
@@ -69,16 +100,24 @@ export function ContactForm({ email }: { email: string | undefined }) {
             placeholder="Your studio"
             required
             maxLength={200}
+            disabled={status === "loading"}
           />
         </div>
         <div className="field">
           <label htmlFor="website">Current website</label>
-          <input id="website" name="website" type="url" placeholder="https://" />
+          <input
+            id="website"
+            name="website"
+            type="url"
+            placeholder="https://yourstudio.com"
+            disabled={status === "loading"}
+          />
         </div>
       </div>
+
       <div className="field">
         <label htmlFor="interest">What can we help with?</label>
-        <select id="interest" name="interest">
+        <select id="interest" name="interest" disabled={status === "loading"}>
           <option>Studio website design</option>
           <option>Website redesign</option>
           <option>Inquiry & booking journeys</option>
@@ -86,6 +125,7 @@ export function ContactForm({ email }: { email: string | undefined }) {
           <option>Not sure yet</option>
         </select>
       </div>
+
       <div className="field">
         <label htmlFor="message">A little about your project *</label>
         <textarea
@@ -94,29 +134,35 @@ export function ContactForm({ email }: { email: string | undefined }) {
           placeholder="What do you create? What would you like your website to do better?"
           required
           maxLength={5000}
+          disabled={status === "loading"}
         />
       </div>
+
       <p className="form-note">
         {email ? (
           <>
-            This form prepares a brief you can download and email to{" "}
-            <a href={`mailto:${email}`}>{email}</a>. Nothing is submitted or stored here.
+            We&apos;ll reply from <a href={`mailto:${email}`}>{email}</a>. We only use
+            your details to respond to this inquiry.
           </>
         ) : (
-          <>
-            This form prepares a downloadable brief, so you keep a copy of everything you write.
-            Nothing is submitted or stored here.
-          </>
+          <>We&apos;ll use your details only to respond to this inquiry.</>
         )}
       </p>
-      <Button type="submit" size="lg">
-        Prepare project brief <Download />
+
+      <Button type="submit" size="lg" disabled={status === "loading"}>
+        {status === "loading" ? "Sending..." : "Send inquiry"}{" "}
+        <Send className="ml-1 h-4 w-4" />
       </Button>
-      {prepared && (
+
+      {status === "success" && (
         <div className="success-message" role="status">
-          {email
-            ? `Your brief has been downloaded. Attach it to an email to ${email} whenever you are ready — nothing has been sent yet.`
-            : "Your brief has been downloaded. Nothing has been sent or stored."}
+          Thanks — your inquiry has been sent. We&apos;ll get back to you soon.
+        </div>
+      )}
+
+      {status === "error" && (
+        <div className="error-message" role="alert">
+          {errorMsg}
         </div>
       )}
     </form>
