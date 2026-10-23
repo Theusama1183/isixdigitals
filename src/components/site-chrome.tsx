@@ -9,7 +9,8 @@ import type { Contact } from "@/lib/contact";
 import { exploreLinks, legalLinks, navigationLinks } from "@/lib/routes";
 import { services } from "@/lib/site-content";
 
-const logo = "/images/isixdigitals-logo.webp";
+const HeaderLogo = "/images/isixdigitals-logo.webp";
+const FooterLogo = "/images/isixdigitals-logo.png";
 
 const links = navigationLinks;
 
@@ -121,7 +122,7 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
       </a>
       <header className="site-header">
         <Link href="/" aria-label="iSixDigitals home" className="brand">
-          <img src={logo} width="372" height="101" alt="iSixDigitals" decoding="async" />
+          <img src={HeaderLogo} width="372" height="101" alt="iSixDigitals" decoding="async" />
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
           {links.map((link) => (
@@ -180,7 +181,7 @@ export function SiteChrome({ contact, children }: { contact: Contact; children: 
           <div className="footer-brand-col">
             <Link href="/" className="footer-brand" aria-label="iSixDigitals home">
               <img
-                src={logo}
+                src={FooterLogo}
                 alt="iSixDigitals"
                 width="372"
                 height="101"
