@@ -98,6 +98,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           data={graph([organizationSchema(), founderSchema(), websiteSchema()])}
         />
         {children}
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="lmADDLSHDT4bDmnX3l1ZTw"
+          async
+        />
       </body>
     </html>
   );
