@@ -15,6 +15,7 @@ export const metadata: Metadata = pageHead(title, description, "/studios");
 const industries = [
   {
     title: "Film & photography studios",
+    href: "/studios/film" as const,
     image: { name: "studio-hero", widths: [768, 1280], width: 1920, height: 1024 },
     alt: "Professional camera in a bright film studio",
     text: "Your work needs room to speak. Your visitors also need context: what you create, who it is for, and how a project starts. We balance visual portfolios with useful information.",
@@ -26,6 +27,7 @@ const industries = [
   },
   {
     title: "Dance studios & schools",
+    href: "/studios/dance" as const,
     image: { name: "dance-studio", widths: [480, 960], width: 1024, height: 768 },
     alt: "Two contemporary dancers rehearsing",
     text: "New students should not have to decode your timetable. Help them understand your classes, find the right level, and feel confident taking the next step.",
@@ -37,6 +39,7 @@ const industries = [
   },
   {
     title: "Music, art & creative spaces",
+    href: "/studios/music-art" as const,
     image: { name: "music-studio", widths: [480, 960], width: 1024, height: 768 },
     alt: "Equipment in a professional recording studio",
     text: "Whether people are booking a session, joining a workshop, or discussing a collaboration, make your space and its possibilities easy to understand.",
@@ -93,7 +96,9 @@ export default function Studios() {
               />
             </div>
             <div>
-              <h2>{studio.title}</h2>
+              <h2>
+                <TextLink to={studio.href}>{studio.title}</TextLink>
+              </h2>
               <p>{studio.text}</p>
               <p className="mt-4 text-sm text-[var(--muted-foreground)]">
                 Typical pages: home, work/index, project pages, about, and a way to get in touch.
@@ -103,6 +108,9 @@ export default function Studios() {
                   <li key={point}>{point}</li>
                 ))}
               </ul>
+              <div className="mt-6">
+                <TextLink to={studio.href}>Learn more</TextLink>
+              </div>
             </div>
           </article>
         ))}

@@ -160,7 +160,13 @@ export function founderSchema() {
   };
 }
 
-export type WebPageType = "WebPage" | "AboutPage" | "ContactPage" | "CollectionPage";
+export type WebPageType =
+  | "WebPage"
+  | "AboutPage"
+  | "ContactPage"
+  | "CollectionPage"
+  | "Service"
+  | "Article";
 
 export function webPageSchema({
   path,

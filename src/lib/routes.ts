@@ -25,6 +25,12 @@ export const publicRoutes = [
   { path: "/process", sitemap: true },
   { path: "/services", sitemap: true },
   { path: "/studios", sitemap: true },
+  { path: "/studios/dance", sitemap: true },
+  { path: "/studios/film", sitemap: true },
+  { path: "/studios/music-art", sitemap: true },
+  { path: "/notes/photography-website-templates", sitemap: true },
+  { path: "/notes/music-studio-website-templates", sitemap: true },
+  { path: "/notes/dance-studio-website-templates", sitemap: true },
   { path: "/terms", sitemap: true },
   { path: "/llms.txt", sitemap: false },
   { path: "/robots.txt", sitemap: false },
@@ -44,6 +50,15 @@ export type SiteLinkPath =
   | "/process"
   | "/services"
   | "/studios"
+  | "/studios/dance"
+  | "/studios/film"
+  | "/studios/music-art"
+  | "/notes/artist-website-examples"
+  | "/notes/photography-website-examples"
+  | "/notes/videographer-website-examples"
+  | "/notes/photography-website-templates"
+  | "/notes/music-studio-website-templates"
+  | "/notes/dance-studio-website-templates"
   | "/terms";
 
 // Main navigation, derived from the manifest so navigation and sitemap
